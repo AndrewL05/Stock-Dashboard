@@ -6,7 +6,7 @@ const PriceFilter = ({ onFilterChange }) => {
 
   const handleFilterSubmit = (e) => {
     e.preventDefault();
-    
+
     const min = minPrice ? parseFloat(minPrice) : 0;
     const max = maxPrice ? parseFloat(maxPrice) : Infinity;
     if (min > max) {
@@ -28,6 +28,7 @@ const PriceFilter = ({ onFilterChange }) => {
             placeholder="e.g. 100"
             value={minPrice}
             onChange={(e) => setMinPrice(e.target.value)}
+            className="filter-input"
           />
         </div>
         <div className="form-group">
@@ -39,9 +40,10 @@ const PriceFilter = ({ onFilterChange }) => {
             placeholder="e.g. 200"
             value={maxPrice}
             onChange={(e) => setMaxPrice(e.target.value)}
+            className="filter-input"
           />
         </div>
-        <button type="submit" className="filter-button">Apply Filter</button>
+        <button type="submit" className="filter-button">Apply</button>
       </form>
     </div>
   );

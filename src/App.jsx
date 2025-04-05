@@ -3,14 +3,17 @@ import Header from "./components/Header";
 import NavBar from "./components/NavBar";
 import Card from "./components/Card";
 import List from "./components/List";
-import PriceFilter from "./components/PriceFilter"; 
+import PriceFilter from "./components/PriceFilter";
+import DateRangeFilter from "./components/DateRangeFilter";
+import StockGraph from "./components/StockGraph";
 
 const App = () => {
   const [symbol, setSymbol] = useState("AAPL");
   const [stockData, setStockData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [priceFilter, setPriceFilter] = useState({ minPrice: 0, maxPrice: Infinity }); 
+  const [priceFilter, setPriceFilter] = useState({ minPrice: 0, maxPrice: Infinity });
+  const [dateRange, setDateRange] = useState(10); 
 
   useEffect(() => {
     const fetchData = async () => {
@@ -23,7 +26,7 @@ const App = () => {
         );
         
         if (!response.ok) {
-          throw new Error(`Ticker symbol ${symbol} not found! `);
+          throw new Error(`API request failed with status ${response.status}`);
         }
         
         const json = await response.json();
@@ -55,11 +58,12 @@ const App = () => {
   const volumes = getNumericValues(stockData, 'volume');
   
   const filteredData = stockData
-    .slice(0, 10) 
     .filter(entry => {
       const closePrice = parseFloat(entry.close);
       return closePrice >= priceFilter.minPrice && closePrice <= priceFilter.maxPrice;
-    }); 
+    })
+    .slice(0, dateRange) 
+    .reverse();
 
   const avg = (arr) => {
     if (!arr.length) return 0;
@@ -73,6 +77,10 @@ const App = () => {
 
   const handlePriceFilterChange = (filter) => {
     setPriceFilter(filter);
+  };
+
+  const handleDateRangeChange = (days) => {
+    setDateRange(days);
   };
 
   return (
@@ -91,6 +99,11 @@ const App = () => {
       <div className="filters-container">
         <NavBar onSearch={setSymbol} />
         <PriceFilter onFilterChange={handlePriceFilterChange} />
+        <DateRangeFilter onFilterChange={handleDateRangeChange} />
+      </div>
+      
+      <div className="graph-container">
+        <StockGraph data={filteredData} />
       </div>
       
       <List data={filteredData} />
