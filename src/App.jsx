@@ -1,0 +1,101 @@
+import { useState, useEffect } from "react";
+import Header from "./components/Header";
+import NavBar from "./components/NavBar";
+import Card from "./components/Card";
+import List from "./components/List";
+import PriceFilter from "./components/PriceFilter"; 
+
+const App = () => {
+  const [symbol, setSymbol] = useState("AAPL");
+  const [stockData, setStockData] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [priceFilter, setPriceFilter] = useState({ minPrice: 0, maxPrice: Infinity }); 
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const apiKey = import.meta.env.VITE_MARKETSTACK_API_KEY;
+        const response = await fetch(
+          `https://api.marketstack.com/v1/eod?access_key=${apiKey}&symbols=${symbol}&limit=100`
+        );
+        
+        if (!response.ok) {
+          throw new Error(`Ticker symbol ${symbol} not found! `);
+        }
+        
+        const json = await response.json();
+        
+        if (!json.data || json.data.length === 0) {
+          throw new Error("No data available for this symbol");
+        }
+        
+        setStockData(json.data);
+      } catch (error) {
+        console.error("API Error:", error);
+        setError(error.message);
+        setStockData([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [symbol]);
+
+  const getNumericValues = (data, key) => {
+    return data
+      .map(d => parseFloat(d[key]))
+      .filter(val => !isNaN(val));
+  };
+
+  const closes = getNumericValues(stockData, 'close');
+  const volumes = getNumericValues(stockData, 'volume');
+  
+  const filteredData = stockData
+    .slice(0, 10) 
+    .filter(entry => {
+      const closePrice = parseFloat(entry.close);
+      return closePrice >= priceFilter.minPrice && closePrice <= priceFilter.maxPrice;
+    }); 
+
+  const avg = (arr) => {
+    if (!arr.length) return 0;
+    const sum = arr.reduce((a, b) => a + b, 0);
+    return (sum / arr.length).toFixed(2);
+  };
+
+  const formatCurrency = (value) => {
+    return isNaN(value) ? 'N/A' : `$${value}`;
+  };
+
+  const handlePriceFilterChange = (filter) => {
+    setPriceFilter(filter);
+  };
+
+  return (
+    <div className="App">
+      <Header />
+      <div className="card-container">
+        <Card title="Average Close" value={closes.length ? formatCurrency(avg(closes)) : 'N/A'} />
+        <Card title="Highest Close" value={closes.length ? formatCurrency(Math.max(...closes)) : 'N/A'} />
+        <Card title="Lowest Close" value={closes.length ? formatCurrency(Math.min(...closes)) : 'N/A'} />
+        <Card title="Average Volume" value={volumes.length ? avg(volumes).toLocaleString() : 'N/A'} />
+      </div>
+      
+      {loading && <div className="loading">Loading data...</div>}
+      {error && <div className="error">{error}</div>}
+      
+      <div className="filters-container">
+        <NavBar onSearch={setSymbol} />
+        <PriceFilter onFilterChange={handlePriceFilterChange} />
+      </div>
+      
+      <List data={filteredData} />
+    </div>
+  );
+};
+
+export default App;

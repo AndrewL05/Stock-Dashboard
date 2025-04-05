@@ -1,0 +1,272 @@
+/* Base Styles */
+:root {
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  color-scheme: light dark;
+  color: #333;
+  background-color: #f5f5f5;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+}
+
+/* Header Styles */
+.header {
+  text-align: left;
+  padding: 1.5rem;
+  background: #2c3e50;
+  color: white;
+}
+
+.header h2 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+/* Card Container */
+.card-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin: 1.5rem auto;
+  padding: 0 1.5rem;
+  max-width: 1200px;
+}
+
+/* Card Styles */
+.card {
+  background: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border-left: 4px solid #3498db;
+}
+
+.card h3 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.1rem;
+  color: #2c3e50;
+}
+
+.card p {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 500;
+  color: #7f8c8d;
+}
+
+/* Filters Container */
+.filters-container {
+  margin: 1.5rem auto;
+  max-width: 1200px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+}
+
+/* Navigation Styles */
+.navbar {
+  padding: 1.5rem;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  flex: 1;
+  min-width: 300px;
+}
+
+/* Price Filter Styles */
+.price-filter {
+  padding: 1.5rem;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  flex: 1;
+  min-width: 300px;
+}
+
+.filter-form {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.filter-form input {
+  padding: 0.6rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  min-width: 100px;
+}
+
+.filter-form button {
+  padding: 0.6rem 1.5rem;
+  background: #3498db;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.filter-form label {
+  font-size: 0.9rem;
+  color: #2c3e50;
+}
+
+/* Table Styles */
+.list-container {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  margin: 1.5rem auto;
+  padding: 1.5rem;
+  max-width: 1200px;
+}
+
+.stock-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.stock-table th,
+.stock-table td {
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.stock-table th {
+  color: #7f8c8d;
+  font-weight: normal;
+}
+
+.stock-table td {
+  color: #2c3e50;
+}
+
+.stock-table tr:last-child td {
+  border-bottom: none;
+}
+
+/* Ensure columns are evenly spaced */
+.stock-table th:nth-child(1),
+.stock-table td:nth-child(1) {
+  width: 15%; /* Date */
+}
+
+.stock-table th:nth-child(2),
+.stock-table td:nth-child(2) {
+  width: 15%; /* Open */
+}
+
+.stock-table th:nth-child(3),
+.stock-table td:nth-child(3) {
+  width: 15%; /* High */
+}
+
+.stock-table th:nth-child(4),
+.stock-table td:nth-child(4) {
+  width: 15%; /* Low */
+}
+
+.stock-table th:nth-child(5),
+.stock-table td:nth-child(5) {
+  width: 15%; /* Close */
+}
+
+.stock-table th:nth-child(6),
+.stock-table td:nth-child(6) {
+  width: 25%; /* Volume */
+}
+
+/* Status Messages */
+.loading, .error {
+  text-align: center;
+  padding: 1.5rem;
+  margin: 1.5rem auto;
+  max-width: 1200px;
+  border-radius: 8px;
+}
+
+.loading {
+  background: #e3f2fd;
+  color: #0d47a1;
+}
+
+.error {
+  background: #ffebee;
+  color: #c62828;
+}
+
+/* Responsive Design */
+@media (max-width: 900px) {
+  .card-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .filters-container {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+@media (max-width: 600px) {
+  .card-container {
+    grid-template-columns: 1fr;
+  }
+
+  .stock-table th,
+  .stock-table td {
+    font-size: 0.9rem;
+  }
+}
+
+/* Dark Mode */
+@media (prefers-color-scheme: dark) {
+  :root {
+    color: #ecf0f1;
+    background-color: #2c3e50;
+  }
+
+  .card, .navbar, .price-filter, .list-container {
+    background: #34495e;
+    color: #ecf0f1;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  }
+
+  .card h3 {
+    color: #ecf0f1;
+  }
+
+  .card p {
+    color: #bdc3c7;
+  }
+
+  .filter-form label {
+    color: #ecf0f1;
+  }
+
+  .stock-table th {
+    color: #95a5a6;
+    border-bottom-color: #3d566e;
+  }
+
+  .stock-table td {
+    color: #ecf0f1;
+    border-bottom-color: #3d566e;
+  }
+
+  .filter-form input {
+    background: #34495e;
+    color: white;
+    border-color: #3d566e;
+  }
+}
