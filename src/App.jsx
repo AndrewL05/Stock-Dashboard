@@ -26,7 +26,7 @@ const App = () => {
         );
         
         if (!response.ok) {
-          throw new Error(`API request failed with status ${response.status}`);
+          throw new Error(`Ticker symbol '${symbol}' not found!`);
         }
         
         const json = await response.json();
