@@ -1,19 +1,23 @@
 import { useState, useEffect } from "react";
-import Header from "./components/Header";
-import NavBar from "./components/NavBar";
 import Card from "./components/Card";
 import List from "./components/List";
+import NavBar from "./components/NavBar";
 import PriceFilter from "./components/PriceFilter";
 import DateRangeFilter from "./components/DateRangeFilter";
 import StockGraph from "./components/StockGraph";
+import VolumeChart from "./components/VolumeChart";
 
 const App = () => {
-  const [symbol, setSymbol] = useState("AAPL");
+  const [symbol, setSymbol] = useState("");
   const [stockData, setStockData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [priceFilter, setPriceFilter] = useState({ minPrice: 0, maxPrice: Infinity });
-  const [dateRange, setDateRange] = useState(10); 
+  const [dateRange, setDateRange] = useState(10);
+  const [visibleCharts, setVisibleCharts] = useState({
+    priceHistory: true,
+    volumeHistory: true
+  });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -83,9 +87,15 @@ const App = () => {
     setDateRange(days);
   };
 
+  const toggleChartVisibility = (chartName) => {
+    setVisibleCharts(prev => ({
+      ...prev,
+      [chartName]: !prev[chartName]
+    }));
+  };
+
   return (
     <div className="App">
-      <Header />
       <div className="card-container">
         <Card title="Average Close" value={closes.length ? formatCurrency(avg(closes)) : 'N/A'} />
         <Card title="Highest Close" value={closes.length ? formatCurrency(Math.max(...closes)) : 'N/A'} />
@@ -103,10 +113,40 @@ const App = () => {
       </div>
       
       <div className="graph-container">
-        <StockGraph data={filteredData} />
+        <div className="chart-header">
+          <h3>Price History</h3>
+          <button 
+            className="toggle-button"
+            onClick={() => toggleChartVisibility('priceHistory')}
+          >
+            {visibleCharts.priceHistory ? 'Hide' : 'Show'}
+          </button>
+        </div>
+        {visibleCharts.priceHistory && (
+          <div className="chart-wrapper">
+            <StockGraph data={filteredData} />
+          </div>
+        )}
       </div>
       
-      <List data={filteredData} />
+      <div className="graph-container">
+        <div className="chart-header">
+          <h3>Volume History</h3>
+          <button 
+            className="toggle-button"
+            onClick={() => toggleChartVisibility('volumeHistory')}
+          >
+            {visibleCharts.volumeHistory ? 'Hide' : 'Show'}
+          </button>
+        </div>
+        {visibleCharts.volumeHistory && (
+          <div className="chart-wrapper">
+            <VolumeChart data={filteredData} />
+          </div>
+        )}
+      </div>
+      
+      <List data={filteredData} symbol={symbol} />
     </div>
   );
 };

@@ -1,7 +1,10 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../App.css';
 
-const List = ({ data }) => {
+const List = ({ data, symbol }) => {
+  const navigate = useNavigate();
+
   if (!data || data.length === 0) {
     return <div className="empty-state">No data available</div>;
   }
@@ -12,6 +15,12 @@ const List = ({ data }) => {
 
   const formatVolume = (vol) => {
     return vol ? parseInt(vol).toLocaleString() : 'N/A';
+  };
+
+  const handleRowClick = (entry) => {
+    // Extract just the date part (YYYY-MM-DD)
+    const dateString = entry.date.slice(0, 10);
+    navigate(`/detail/${symbol}/${dateString}`);
   };
 
   return (
@@ -29,7 +38,11 @@ const List = ({ data }) => {
         </thead>
         <tbody>
           {data.map((entry, index) => (
-            <tr key={index}>
+            <tr 
+              key={index} 
+              onClick={() => handleRowClick(entry)}
+              className="clickable-row"
+            >
               <td>{entry.date?.slice(0, 10) || 'N/A'}</td>
               <td>{formatNumber(entry.open)}</td>
               <td>{formatNumber(entry.high)}</td>
