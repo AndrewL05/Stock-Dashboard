@@ -1,4 +1,4 @@
-# Web Development Project 5 - *Data Dashboard Part 1*
+# Web Development Project 6 - *Data Dashboard Part 2*
 
 Submitted by: **Andrew Li**
 
@@ -27,7 +27,7 @@ The following **optional** features are implemented:
   
 The following **additional** features are implemented:
 
-* [x] Detailed page shows additional information about the stock specific to the clicked date.
+* [x] The detailed page shows additional information about the stock specific to the date clicked.
 
 ## Video Walkthrough
 
